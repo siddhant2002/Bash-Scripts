@@ -2,8 +2,8 @@
 
 # Set your AWS region and credentials
 AWS_REGION="ap-south-1"
-AWS_ACCESS_KEY_ID="AKIA4T4TVLEQIFVDPN63"
-AWS_SECRET_ACCESS_KEY="JO5P1ofyiD1Ude0ab7uCtgMdTbs3DRgM9iSn4NDX"
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
 
 # Security group settings
 INSTANCE_TYPE="t2.micro"
