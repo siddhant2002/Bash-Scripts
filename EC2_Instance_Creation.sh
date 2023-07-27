@@ -1,47 +1,33 @@
 #!/bin/bash
+MyKeyPair="Phal"
+Security_Group_Name="Phalguni"
 
-# EC2 instance settings
-INSTANCE_TYPE="t2.micro"
-AMI_ID="ami-0f5ee92e2d63afc18"  
+Security_Group_Description="My-Security-Group"
 
-# Security group settings
-SECURITY_GROUP_NAME="Chopa-Group"
-SECURITY_GROUP_DESCRIPTION="My security "
-SSH_PORT=22
+ami_id="ami-072ec8f4ea4a6f2cf"
+instance_name="Pagluni"
 
-# Key pair settings
-KEY_NAME="siddhant-pair"
+aws ec2 create-key-pair --key-name "$MyKeyPair" --query 'KeyMaterial' --output text > "$MyKeyPair.pem"
 
-# Other settings
-INSTANCE_NAME="Champu"
+chmod 400 "$MyKeyPair.pem"
 
-# Create a security group
-aws ec2 create-security-group --group-name "$SECURITY_GROUP_NAME" --description "$SECURITY_GROUP_DESCRIPTION"
+aws ec2 describe-key-pairs --key-name "$MyKeyPair"
 
-# Allow SSH access from all IP addresses (0.0.0.0/0)
-aws ec2 authorize-security-group-ingress --group-name "$SECURITY_GROUP_NAME" --protocol tcp --port $SSH_PORT --cidr 0.0.0.0/0
+Security_id=$(aws ec2 create-security-group --group-name "$Security_Group_Name" --description "$Security_Group_Description" --output text)
 
-# Create an EC2 key pair
-aws ec2 create-key-pair --key-name "$KEY_NAME" --query 'KeyMaterial' --output text > "$KEY_NAME.pem"
+aws ec2 describe-security-groups --group-ids "$Security_id"
+aws ec2 authorize-security-group-ingress --group-id "$Security_id" --protocol tcp --port 22 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id "$Security_id" --protocol tcp --port 80 --cidr 0.0.0.0/0
+instance_id=$(aws ec2 run-instances --image-id "$ami_id" --count 1 --instance-type t2.micro --key-name "$MyKeyPair" --security-group-ids "$Security_id"  --query 'Instances[0].InstanceId' --output text)
 
-# Set appropriate permissions for the private key file
-chmod 400 "$KEY_NAME.pem"
 
-# Launch the EC2 instance
-INSTANCE_ID=$(aws ec2 run-instances --image-id "$AMI_ID" --instance-type "$INSTANCE_TYPE" --security-groups "$SECURITY_GROUP_NAME" --key-name "$KEY_NAME" --query 'Instances[0].InstanceId' --output text)
+aws ec2 create-tags --resources "$instance_id" --tags Key=Name,Value=$instance_name
+aws ec2 describe-instances
 
-# Add tags to the instance for better identification
-aws ec2 create-tags --resources "$INSTANCE_ID" --tags "Key=Name,Value=$INSTANCE_NAME"
+sleep 1m 30s
 
-# Wait until the instance is running
-echo "Waiting for the instance to start..."
-aws ec2 wait instance-running --instance-ids "$INSTANCE_ID"
-
-# Get the public IP address of the instance
-PUBLIC_IP=$(aws ec2 describe-instances --instance-ids "$INSTANCE_ID" --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)
+aws ec2 terminate-instances --instance-ids "$instance_id"
 
 echo "EC2 instance created successfully!"
-echo "Instance ID: $INSTANCE_ID"
-echo "Public IP address: $PUBLIC_IP"
-echo "Key pair file: $KEY_NAME.pem"
-
+echo "Instance ID: $instance_id"
+echo "Key pair file: $MyKeyPair.pem"
