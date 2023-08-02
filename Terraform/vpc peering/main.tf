@@ -225,7 +225,7 @@ resource "aws_instance" "example-2" {
 
 #vpc peering connection
 resource "aws_vpc_peering_connection" "peering" {
-  peer_owner_id = ""  #replace with ur own id
+  peer_owner_id = "xxxxxxxxxxxxxxxxxxx"
   peer_vpc_id   = aws_vpc.main2.id
   vpc_id        = aws_vpc.main1.id
   auto_accept = true
