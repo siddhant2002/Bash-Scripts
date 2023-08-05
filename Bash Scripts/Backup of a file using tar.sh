@@ -16,4 +16,3 @@ fi
 tar -czvf "$backup_directory/$backup_filename" "$source_directory"
 
 echo "Backup created: $backup_directory/$backup_filename"
-
