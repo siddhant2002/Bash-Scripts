@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Function to print horizontal line
+
 function print_horizontal_line {
     echo "--------------------------------------------------"
 }
 
-# Function to print system information
+
 function print_system_info {
     echo "System Information:"
     print_horizontal_line
@@ -20,6 +20,6 @@ function print_system_info {
     print_horizontal_line
 }
 
-# Call the function to print system information
+
 print_system_info
 
