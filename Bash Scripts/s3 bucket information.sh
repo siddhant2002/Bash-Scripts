@@ -1,9 +1,5 @@
 #!/bin/bash
-
-
-BUCKET_NAME="chopa231"
-
-
+BUCKET_NAME="your name"
 function get_total_size() {
     aws s3 ls s3://$BUCKET_NAME --recursive --human-readable --summarize | grep "Total Size" | awk '{print $3, $4}'
 }
