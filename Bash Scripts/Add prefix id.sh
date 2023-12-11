@@ -7,5 +7,6 @@ if [ ! -f "$input_file" ]; then
     exit 1
 fi
 
+
 sed 's/^/ID: /' "$input_file" > "$output_file"
 echo "Prefix added to each line and saved to $output_file"
